@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Pokloni & Popusti – BOGO / Gifts / Discounts for WooCommerce
  * Description:  Korak-po-korak BOGO, gratis i poklon logika za WooCommerce.
- * Version:      1.0.23
+ * Version:      1.1.0
  * Requires PHP: 7.4
  * Author:       Suavemente
  * Licence:      GPL-2.0+
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /* ─────────────────────────────────────────────────────────
  *  CONSTANTS
  * ──────────────────────────────────────────────────────── */
-define( 'PNP_VERSION',    '1.0.23' );
+define( 'PNP_VERSION',    '1.1.0' );
 define( 'PNP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PNP_TABLE',      'pnp_rules' );
 define( 'PNP_GIFT_CAT',   13112 );

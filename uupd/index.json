@@ -1,18 +1,18 @@
 {
   "slug": "pokloni-plugin",
   "name": "Pokloni & Popusti – BOGO / Gifts / Discounts for WooCommerce",
-  "version": "1.0.23",
+  "version": "1.1.0",
   "author": "Suavemente",
   "author_homepage": "",
   "requires_php": "7.4",
   "requires": "6.5",
   "tested": "6.7.0",
   "sections": {
-    "description": "Korak-po-korak BOGO, gratis i poklon logika za WooCommerce.",
-    "installation": "Upload the plugin ZIP via Plugins > Add New and activate.",
-    "changelog": "#### 1.0.23\n\n* Release metadata / UUPD update test.\n\n#### 0.7.0\n\n* Reworks Key ingredients into a single scrollable selector with live counter and enforced five-item cap tied to selected ingredients.\n* Simplifies attribute rows to dropdown-only selection with reliable value multi-select and default price impact autofill.\n* Adds a unified Manage attributes & values modal to create attributes/values and edit default impacts without stacking modals.\n* Tightens modal targeting so only the intended dialog opens when adding products or managing options.\n\n#### 0.6.3\n\n* Polishes media previews in the product General tab with consistent thumbnails and aligned remove actions.\n* Refreshes the create-ingredient modal layout to match the wizard and keep controls aligned.\n* Limits key ingredients to selected items with lighter rendering for large catalogs and debounced search.\n* Auto-fills price impacts from default values when selecting attribute options while allowing overrides.\n* Tightens modal open/close logic so only the intended modal is shown when adding products or creating options.\n\n#### 0.6.2\n\n* Enforces required fields with server-side validation, syncs saves/deletes to WooCommerce, and reconciles orphaned PLS records.\n* Adds per-product and bulk sync controls with tracked last-sync status and WC IDs returned on save.\n* Updates the product modal with thumbnail media previews, ingredient search + creation modal, and attribute/value creation modals.\n\n#### 0.6.1\n\n* Moves spotlighted key ingredients into their own panel and removes the unused icon tips.\n* Adds inline attribute search so existing options are easier to reuse while editing products.\n* Refreshes version metadata for the next release.\n\n#### 0.6.0\n\n* Fixes media pickers by enqueueing WordPress media scripts and improves textarea styling for product storytelling.\n* Enables instant ingredient creation with short descriptions, refreshed selection lists, and richer key-ingredient previews with fallbacks.\n* Makes label application optional, formats attribute prices, and auto-loads attribute values for faster configuration.\n\n#### 0.5.21\n\n* Refreshes the product wizard with separate panels for descriptions, directions, skin types, and benefits plus softer styling.\n* Rebuilds attribute selection to toggle between existing options or new entries with price impacts tied to chosen values.\n* Streamlines label customization with design callouts, enforced label-guide defaults, and clearer upload expectations.\n\n#### 0.4.3\n\n* Hardens the PLS product screen to prevent critical errors and simplifies attribute creation to label-only.\n* Keeps WooCommerce untouched while the modal editor handles packs, media, ingredients, and label options.\n\n#### 0.4.1\n\n* Conflict-free branch with updated release metadata for packaging.\n\n#### 0.4.0\n\n* Modern modal-first product builder with instant packs, media, and label options.\n* Ingredients and categories can be created directly inside PLS without Woo sync."
+    "description": "Korak-po-korak BOGO, gratis i poklon logika za WooCommerce, sa pravilima zasnovanim na kategorijama, brendovima i linijama proizvoda.",
+    "installation": "Uploadujte ZIP fajl (pokloni-plugin.zip) preko Plugins > Add New > Upload, aktivirajte plugin i podesite pravila pod WooCommerce > Pokloni & Popusti.",
+    "changelog": "#### 1.1.0\n\n* Dokumentacija (README.md) i osvežen UUPD manifest za GitHub Releases.\n* Povećana verzija na 1.1.0 kako bi WordPress detektovao novo izdanje.\n\n#### 1.0.23\n\n* UUPD manifest i metapodaci osveženi radi testiranja update sistema."
   },
-  "last_updated": "2025-12-23 14:37:34",
+  "last_updated": "2025-12-23 17:44:26",
   "download_url": "https://github.com/centrino97/pokloni-plugin/releases/latest/download/pokloni-plugin.zip",
   "banners": {},
   "icons": {}
