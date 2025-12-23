@@ -1,0 +1,39 @@
+name: Build plugin ZIP and attach to release
+
+on:
+  push:
+    tags:
+      - 'v*'   # e.g. v1.0.23
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build plugin ZIP
+        run: |
+          PLUGIN_SLUG="pokloni-plugin"
+
+          mkdir -p build/"$PLUGIN_SLUG"
+
+          # Copy everything needed for the plugin (safe default)
+          rsync -av \
+            --exclude=".git" \
+            --exclude=".github" \
+            --exclude="build" \
+            --exclude="node_modules" \
+            --exclude="*.zip" \
+            ./ build/"$PLUGIN_SLUG"/
+
+          cd build
+          zip -r "../${PLUGIN_SLUG}.zip" "$PLUGIN_SLUG"
+
+      - name: Upload ZIP to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: pokloni-plugin.zip
