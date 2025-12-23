@@ -1,0 +1,3 @@
+PLS – Private Label Store
+Self-hosted updates via UUPD.
+Repo: https://github.com/centrino97/pls-private-label-store

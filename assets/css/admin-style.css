@@ -1,0 +1,309 @@
+/* Modern Admin Dashboard for Onlinea Pokloni v2.0 */
+.pnp-modern-wrap {
+    max-width: 1400px;
+    margin: 20px auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* Tabs */
+.pnp-tabs {
+    display: flex;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-bottom: none;
+    margin-top: 20px;
+}
+
+.pnp-tab {
+    padding: 15px 25px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.pnp-tab.active {
+    border-bottom-color: #2271b1;
+    color: #2271b1;
+}
+
+.pnp-tab:hover {
+    background: #f0f0f1;
+}
+
+/* Tab Content */
+.pnp-tab-content {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    padding: 25px;
+    display: none;
+}
+
+.pnp-tab-content.active {
+    display: block;
+}
+
+/* Cards for rules */
+.pnp-rule-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.pnp-rule-card {
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+    transition: box-shadow 0.3s;
+}
+
+.pnp-rule-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.pnp-rule-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.pnp-rule-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.pnp-rule-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Toggle Switch */
+.pnp-toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.pnp-toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.pnp-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.pnp-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .pnp-slider {
+    background-color: #2271b1;
+}
+
+input:checked + .pnp-slider:before {
+    transform: translateX(26px);
+}
+
+/* Rule Details */
+.pnp-rule-details {
+    margin-bottom: 15px;
+}
+
+.pnp-rule-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.pnp-rule-detail-label {
+    font-weight: 500;
+    color: #50575e;
+}
+
+.pnp-rule-detail-value {
+    color: #1d2327;
+}
+
+/* Action Buttons */
+.pnp-rule-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.pnp-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.pnp-btn-edit {
+    background: #2271b1;
+    color: #fff;
+}
+
+.pnp-btn-edit:hover {
+    background: #135e96;
+    color: #fff;
+}
+
+.pnp-btn-delete {
+    background: #dc3232;
+    color: #fff;
+}
+
+.pnp-btn-delete:hover {
+    background: #a00;
+    color: #fff;
+}
+
+/* Add New Rule Button */
+.pnp-add-new-btn {
+    background: #2271b1;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: background 0.3s;
+}
+
+.pnp-add-new-btn:hover {
+    background: #135e96;
+}
+
+/* Form Styles */
+.pnp-form-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.pnp-form-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #1d2327;
+}
+
+.pnp-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.pnp-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.pnp-form-group label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #50575e;
+}
+
+.pnp-form-group input,
+.pnp-form-group select {
+    padding: 8px 10px;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Product Selector */
+.pnp-product-selector {
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #fff;
+}
+
+.pnp-product-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.pnp-product-item:last-child {
+    border-bottom: none;
+}
+
+.pnp-product-item input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.pnp-product-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    margin-right: 10px;
+    border-radius: 3px;
+}
+
+/* Search */
+.pnp-search-box {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+/* Date Range */
+.pnp-date-range {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    .pnp-rule-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .pnp-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
