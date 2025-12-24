@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Pokloni & Popusti – BOGO / Gifts / Discounts for WooCommerce
  * Description:  Korak-po-korak BOGO, gratis i poklon logika za WooCommerce.
- * Version:      1.0.22
+ * Version:      1.2.0
  * Requires PHP: 7.4
  * Author:       Suavemente
  * Licence:      GPL-2.0+
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /* ─────────────────────────────────────────────────────────
  *  CONSTANTS
  * ──────────────────────────────────────────────────────── */
-define( 'PNP_VERSION',    '1.0.22' );
+define( 'PNP_VERSION',    '1.2.0' );
 define( 'PNP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PNP_TABLE',      'pnp_rules' );
 define( 'PNP_GIFT_CAT',   13112 );
@@ -43,6 +43,21 @@ add_action( 'plugins_loaded', function () {
         basename( __DIR__ ) . '/languages'
     );
 } );
+
+/* ─────────────────────────────────────────────────────────
+ *  UPDATES
+ * ──────────────────────────────────────────────────────── */
+add_action( 'plugins_loaded', function () {
+    require_once PNP_PLUGIN_DIR . 'includes/updater.php';
+
+    \UUPD\V1\UUPD_Updater_V1::register( [
+        'plugin_file' => plugin_basename( __FILE__ ),
+        'slug'        => 'pokloni-plugin',
+        'name'        => 'Pokloni & Popusti – BOGO / Gifts / Discounts for WooCommerce',
+        'version'     => PNP_VERSION,
+        'server'      => 'https://raw.githubusercontent.com/centrino97/pokloni-plugin/main/uupd/index.json',
+    ] );
+}, 20 );
 
 /* ─────────────────────────────────────────────────────────
  *  HOOKS (front end)

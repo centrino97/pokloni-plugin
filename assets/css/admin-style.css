@@ -60,6 +60,11 @@
     transition: box-shadow 0.3s;
 }
 
+.pnp-rule-card[data-active="0"] {
+    background: #fbfbfb;
+    border-color: #e5e5e5;
+}
+
 .pnp-rule-card:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
@@ -83,6 +88,31 @@
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.pnp-status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #f0f0f1;
+    color: #1d2327;
+}
+
+.pnp-status-active {
+    background: #e7f7ef;
+    color: #0f5132;
+}
+
+.pnp-status-inactive {
+    background: #fbeaea;
+    color: #842029;
+}
+
+.pnp-is-saving {
+    opacity: 0.7;
 }
 
 /* Toggle Switch */
@@ -152,6 +182,44 @@ input:checked + .pnp-slider:before {
     color: #1d2327;
 }
 
+/* Rules toolbar */
+.pnp-rules-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.pnp-rules-toolbar-left {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.pnp-rules-search {
+    min-width: 220px;
+    padding: 6px 10px;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+}
+
+.pnp-rules-filter {
+    min-width: 150px;
+}
+
+.pnp-rules-count {
+    font-size: 13px;
+    color: #50575e;
+}
+
+.pnp-filter-empty {
+    margin-top: 10px;
+    color: #646970;
+}
+
 /* Action Buttons */
 .pnp-rule-actions {
     display: flex;
@@ -190,6 +258,11 @@ input:checked + .pnp-slider:before {
     color: #fff;
 }
 
+.pnp-btn-delete.pnp-delete-trigger {
+    border: 1px solid #dc3232;
+    box-shadow: none;
+}
+
 /* Add New Rule Button */
 .pnp-add-new-btn {
     background: #2271b1;
@@ -206,6 +279,44 @@ input:checked + .pnp-slider:before {
 
 .pnp-add-new-btn:hover {
     background: #135e96;
+}
+
+/* Modal */
+.pnp-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+}
+
+.pnp-modal.is-open {
+    display: flex;
+}
+
+.pnp-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.pnp-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 6px;
+    padding: 24px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.pnp-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 /* Form Styles */
