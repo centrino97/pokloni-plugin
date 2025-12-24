@@ -4,21 +4,8 @@ jQuery(document).ready(function($) {
     const $emptyState = $('.pnp-filter-empty');
     const $ruleModal = $('#pnp-add-rule');
 
-    // Tab switching
-    $('.pnp-tab').on('click', function(event) {
-        var tabId = $(this).data('tab');
-
-        if (tabId === 'pnp-add-rule' && $ruleModal.length) {
-            event.preventDefault();
-            openRuleModal();
-            return;
-        }
-
-        $('.pnp-tab').removeClass('active');
-        $(this).addClass('active');
-
-        $('.pnp-tab-content').removeClass('active');
-        $('#' + tabId).addClass('active');
+    $('.pnp-open-rule-modal').on('click', function() {
+        openRuleModal();
     });
 
     function openRuleModal() {
@@ -31,6 +18,9 @@ jQuery(document).ready(function($) {
     function closeRuleModal() {
         $ruleModal.removeClass('is-open').attr('aria-hidden', 'true');
         $('body').removeClass('pnp-modal-open');
+        if ($ruleModal.data('edit') === 1 && $ruleModal.data('base-url')) {
+            window.location.href = $ruleModal.data('base-url');
+        }
     }
 
     function updateStatus($card, isActive) {

@@ -1,7 +1,7 @@
 {
   "slug": "pokloni-plugin",
   "name": "Pokloni & Popusti – BOGO / Gifts / Discounts for WooCommerce",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "author": "Suavemente",
   "author_homepage": "",
   "requires_php": "7.4",
@@ -10,9 +10,9 @@
   "sections": {
     "description": "Korak-po-korak BOGO, gratis i poklon logika za WooCommerce, sa pravilima zasnovanim na kategorijama, brendovima i linijama proizvoda.",
     "installation": "Uploadujte ZIP fajl (pokloni-plugin.zip) preko Plugins > Add New > Upload, aktivirajte plugin i podesite pravila pod WooCommerce > Pokloni & Popusti.",
-    "changelog": "#### 1.3.0\n\n* Dodati jasni rezimei pravila i bolje objašnjenje nagrade/opsega u admin listi.\n* Forma za dodavanje/izmenu prebačena u modal sa koracima i live rezimeom.\n\n#### 1.2.0\n\n* Poboljšan admin UX: jasniji status, kontekstualni rezime pravila i sigurnije brisanje.\n* Stabilniji prikaz edit forme i selekcija proizvoda bez promene rule logike.\n\n#### 1.1.0\n\n* Dokumentacija (README.md) i osvežen UUPD manifest za GitHub Releases.\n* Povećana verzija na 1.1.0 kako bi WordPress detektovao novo izdanje.\n\n#### 1.0.23\n\n* UUPD manifest i metapodaci osveženi radi testiranja update sistema."
+    "changelog": "#### 1.4.0\n\n* Jednostavniji UI bez tabova, sa jasnijim rezimeom pravila i čistim prikazom cena.\n* Modalni editor lakši za čitanje i manje vizuelno opterećen.\n\n#### 1.3.0\n\n* Dodati jasni rezimei pravila i bolje objašnjenje nagrade/opsega u admin listi.\n* Forma za dodavanje/izmenu prebačena u modal sa koracima i live rezimeom.\n\n#### 1.2.0\n\n* Poboljšan admin UX: jasniji status, kontekstualni rezime pravila i sigurnije brisanje.\n* Stabilniji prikaz edit forme i selekcija proizvoda bez promene rule logike.\n\n#### 1.1.0\n\n* Dokumentacija (README.md) i osvežen UUPD manifest za GitHub Releases.\n* Povećana verzija na 1.1.0 kako bi WordPress detektovao novo izdanje.\n\n#### 1.0.23\n\n* UUPD manifest i metapodaci osveženi radi testiranja update sistema."
   },
-  "last_updated": "2025-12-24 17:09:05",
+  "last_updated": "2025-12-24 18:55:18",
   "download_url": "https://github.com/centrino97/pokloni-plugin/releases/latest/download/pokloni-plugin.zip",
   "banners": {},
   "icons": {}

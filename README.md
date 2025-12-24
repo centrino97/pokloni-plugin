@@ -36,7 +36,7 @@ Pokloni & Popusti je WooCommerce dodatak koji omogućava korak‑po‑korak krei
 - `download_url` u manifestu upućuje na GitHub Releases `latest`. Za novi release:
   1. Povećajte verziju u plugin header-u i u `PNP_VERSION`.
   2. Ažurirajte `/uupd/index.json` (`version`, `last_updated`, changelog, download_url) i `/uupd/info.txt`.
-  3. Tagujte verziju (npr. `v1.3.0`) i objavite GitHub Release sa asset-om `pokloni-plugin.zip`.
+  3. Tagujte verziju (npr. `v1.4.0`) i objavite GitHub Release sa asset-om `pokloni-plugin.zip`.
   4. WordPress će povući update preko UUPD i ponuditi instalaciju.
 
 ## 7. Razvoj
@@ -52,6 +52,7 @@ Pokloni & Popusti je WooCommerce dodatak koji omogućava korak‑po‑korak krei
 - Frontend ne dodaje dodatne capability provere van WooCommerce validacija; za specifična ograničenja poklon kategorije koristi se `woocommerce_add_to_cart_validation`.
 
 ## 9. Changelog
+- **1.4.0** — Pojednostavljen UI bez tabova, čišći rezimei i lakši modal editor.
 - **1.3.0** — Modalni multi‑step editor i jasniji rezimei pravila u admin listi.
 - **1.2.0** — Admin UX poboljšanja (status, rezimei pravila, sigurnije brisanje) bez izmene rule logike.
 - **1.1.0** — Dodata README.md dokumentacija, osvežen UUPD manifest i verzija za GitHub Releases.

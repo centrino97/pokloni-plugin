@@ -3,8 +3,6 @@
 <?php
 // Ako imamo ?edit= u URL-u (novo ili postojeće pravilo), otvaramo drugi tab po difoltu.
 $is_edit_screen  = isset( $_GET['edit'] );
-$list_tab_class  = $is_edit_screen ? '' : 'active';
-$form_tab_class  = $is_edit_screen ? 'active' : '';
 $scope_labels = [
     'product'     => 'Proizvod',
     'product_cat' => 'Kategorija',
@@ -17,6 +15,13 @@ foreach ( $all_terms as $tax => $terms ) {
         $term_names[ $tax ][ $term->term_id ] = $term->name;
     }
 }
+$currency_symbol = get_woocommerce_currency_symbol();
+$format_amount = function( $value ) use ( $currency_symbol ) {
+    if ( '' === $value || null === $value ) {
+        return '—';
+    }
+    return sprintf( '%s %s', wc_format_localized_price( $value ), $currency_symbol );
+};
 $format_scope = function( $scope, $term_id, $ids_csv ) use ( $term_names, $scope_labels ) {
     $scope_label = $scope_labels[ $scope ] ?? ucfirst( (string) $scope );
     $ids = array_filter( array_map( 'absint', explode( ',', (string) $ids_csv ) ) );
@@ -54,21 +59,11 @@ $format_scope = function( $scope, $term_id, $ids_csv ) use ( $term_names, $scope
 <div class="wrap pnp-modern-wrap">
     <h1><?php esc_html_e('Onlinea Pokloni & Popusti', 'pokloni-popusti'); ?></h1>
     
-    <!-- Tabs -->
-    <div class="pnp-tabs">
-        <div class="pnp-tab <?php echo esc_attr( $list_tab_class ); ?>" data-tab="pnp-rules-list">
-            <?php esc_html_e('Pravila', 'pokloni-popusti'); ?>
-        </div>
-        <div class="pnp-tab <?php echo esc_attr( $form_tab_class ); ?>" data-tab="pnp-add-rule">
-            <?php esc_html_e('Dodaj/Izmeni Pravilo', 'pokloni-popusti'); ?>
-        </div>
-    </div>
-
-    <!-- ========== TAB 1: RULES LIST ========== -->
-    <div id="pnp-rules-list" class="pnp-tab-content <?php echo esc_attr( $list_tab_class ); ?>">
-        <a href="<?php echo esc_url(add_query_arg('edit', 0, admin_url('admin.php?page=pnp_settings'))); ?>" class="pnp-add-new-btn">
+    <!-- ========== RULES LIST ========== -->
+    <div id="pnp-rules-list" class="pnp-tab-content active">
+        <button type="button" class="pnp-add-new-btn pnp-open-rule-modal">
             <?php esc_html_e('+ Dodaj novo pravilo', 'pokloni-popusti'); ?>
-        </a>
+        </button>
 
         <div class="pnp-rules-toolbar">
             <div class="pnp-rules-toolbar-left">
@@ -113,11 +108,11 @@ $format_scope = function( $scope, $term_id, $ids_csv ) use ( $term_names, $scope
                     $reward_badge = '';
                     $reward_color = '';
                     if ($r['reward_type'] === 'gift') {
-                        $reward_badge = '🎁 POKLON';
+                        $reward_badge = 'POKLON';
                         $reward_color = '#10b981'; // green
                         $reward_title = __( 'Poklon iz posebne kategorije poklona.', 'pokloni-popusti' );
                     } else {
-                        $reward_badge = '🆓 GRATIS';
+                        $reward_badge = 'GRATIS';
                         $reward_color = '#3b82f6'; // blue
                         $reward_title = __( 'Gratis proizvod (naplata 0.01 RSD).', 'pokloni-popusti' );
                     }
@@ -125,11 +120,11 @@ $format_scope = function( $scope, $term_id, $ids_csv ) use ( $term_names, $scope
                     // Determine condition type
                     $cond_text = '';
                     if ($r['enable_cart']) {
-                        $cond_text = sprintf('💰 Korpa ≥ %s', wc_price($r['cart_val']));
+                        $cond_text = sprintf('Korpa ≥ %s', $format_amount( $r['cart_val'] ));
                     } elseif ($r['enable_buy_y']) {
-                        $cond_text = sprintf('🛒 Kupi %d X + %d Y', $r['buy_x_qty'], $r['buy_y_qty']);
+                        $cond_text = sprintf('Kupi %d X + %d Y', $r['buy_x_qty'], $r['buy_y_qty']);
                     } else {
-                        $cond_text = sprintf('🛒 Kupi %d X', $r['buy_x_qty']);
+                        $cond_text = sprintf('Kupi %d X', $r['buy_x_qty']);
                     }
 
                     $condition_type = $r['enable_cart'] ? 'cart' : ( $r['enable_buy_y'] ? 'buy_xy' : 'buy_x' );
@@ -151,7 +146,7 @@ $format_scope = function( $scope, $term_id, $ids_csv ) use ( $term_names, $scope
                     if ( $r['enable_cart'] ) {
                         $condition_summary = sprintf(
                             '%s • %s',
-                            sprintf( __( 'Korpa ≥ %s', 'pokloni-popusti' ), wc_price( $r['cart_val'] ) ),
+                            sprintf( __( 'Korpa ≥ %s', 'pokloni-popusti' ), $format_amount( $r['cart_val'] ) ),
                             $scope_summary
                         );
                     } elseif ( $r['enable_buy_y'] ) {
@@ -321,6 +316,7 @@ $format_scope = function( $scope, $term_id, $ids_csv ) use ( $term_names, $scope
     <div id="pnp-add-rule"
          class="pnp-rule-modal"
          data-edit="<?php echo esc_attr( $is_edit_screen ? '1' : '0' ); ?>"
+         data-base-url="<?php echo esc_url( admin_url( 'admin.php?page=pnp_settings' ) ); ?>"
          aria-hidden="<?php echo esc_attr( $is_edit_screen ? 'false' : 'true' ); ?>">
         <div class="pnp-modal-overlay" data-modal-close="true"></div>
         <div class="pnp-rule-modal-content" role="dialog" aria-labelledby="pnp-rule-modal-title">
@@ -343,13 +339,13 @@ $format_scope = function( $scope, $term_id, $ids_csv ) use ( $term_names, $scope
 
             <!-- ========== SECTION 1: REWARD ========== -->
             <div class="pnp-form-section pnp-step" data-step="1">
-                <h3>1️⃣ Nagrada (šta korisnik dobija)</h3>
+                <h3><?php esc_html_e( 'Nagrada', 'pokloni-popusti' ); ?></h3>
                 <div class="pnp-form-grid">
                     <div class="pnp-form-group">
                         <label>Tip nagrade</label>
                         <select id="pnp_reward_type" name="reward_type" required>
-                            <option value="gift" <?php selected($f['reward_type'], 'gift'); ?>>🎁 Poklon (iz posebne kategorije)</option>
-                            <option value="free" <?php selected($f['reward_type'], 'free'); ?>>🆓 Gratis (bilo koji proizvod, cena 0.01 RSD)</option>
+                            <option value="gift" <?php selected($f['reward_type'], 'gift'); ?>><?php esc_html_e( 'Poklon (iz posebne kategorije)', 'pokloni-popusti' ); ?></option>
+                            <option value="free" <?php selected($f['reward_type'], 'free'); ?>><?php esc_html_e( 'Gratis (bilo koji proizvod, cena 0.01 RSD)', 'pokloni-popusti' ); ?></option>
                         </select>
                     </div>
                     
@@ -454,21 +450,21 @@ $format_scope = function( $scope, $term_id, $ids_csv ) use ( $term_names, $scope
 
             <!-- ========== SECTION 2: CONDITION ========== -->
             <div class="pnp-form-section pnp-step" data-step="2">
-                <h3>2️⃣ Uslov (šta korisnik mora da uradi)</h3>
+                <h3><?php esc_html_e( 'Uslov', 'pokloni-popusti' ); ?></h3>
                 
                 <div class="pnp-form-group">
                     <label style="font-weight:600; margin-bottom:10px; display:block;">Izaberite tip uslova:</label>
                     <label style="display:block; margin-bottom:8px;">
                         <input type="radio" name="cond_type" value="buy_x" <?php checked(!$f['enable_buy_y'] && !$f['enable_cart'], true); ?>> 
-                        🛒 Kupi X proizvoda
+                        <?php esc_html_e( 'Kupi X proizvoda', 'pokloni-popusti' ); ?>
                     </label>
                     <label style="display:block; margin-bottom:8px;">
                         <input type="radio" name="cond_type" value="buy_xy" <?php checked($f['enable_buy_y'], 1); ?>> 
-                        🛒 Kupi X + Y proizvoda
+                        <?php esc_html_e( 'Kupi X + Y proizvoda', 'pokloni-popusti' ); ?>
                     </label>
                     <label style="display:block;">
                         <input type="radio" name="cond_type" value="cart" <?php checked($f['enable_cart'], 1); ?>> 
-                        💰 Vrednost korpe ≥ X RSD
+                        <?php esc_html_e( 'Vrednost korpe ≥ X RSD', 'pokloni-popusti' ); ?>
                     </label>
                 </div>
 
@@ -623,7 +619,7 @@ $format_scope = function( $scope, $term_id, $ids_csv ) use ( $term_names, $scope
 
             <!-- ========== SECTION 3: CUSTOM TEXTS ========== -->
             <div class="pnp-form-section pnp-step" data-step="3">
-                <h3>3️⃣ Prilagođeni Tekstovi (opciono)</h3>
+                <h3><?php esc_html_e( 'Tekstovi (opciono)', 'pokloni-popusti' ); ?></h3>
                 <p style="margin-bottom:15px; color:#646970;">
                     Ovde možeš promeniti tekstove koje korisnici vide za <strong>OVO pravilo</strong>. Ako ostaviš prazno, koristiće se standardni tekstovi.
                 </p>
@@ -688,7 +684,7 @@ $format_scope = function( $scope, $term_id, $ids_csv ) use ( $term_names, $scope
 
             <!-- ========== SECTION 4: SCHEDULE & STATUS ========== -->
             <div class="pnp-form-section pnp-step" data-step="4">
-                <h3>4️⃣ Raspored i Status</h3>
+                <h3><?php esc_html_e( 'Raspored i status', 'pokloni-popusti' ); ?></h3>
                 
                 <div class="pnp-form-grid">
                     <div class="pnp-form-group">
@@ -862,6 +858,13 @@ jQuery(function($){
     $('select[id$="_term"]').on('change', function(){
         const group = $(this).attr('id').replace('_term', '');
         loadProducts(group);
+    });
+
+    $('.pnp-product-selector').on('change', 'input.pnp-prod', function(){
+        const group = $(this).data('group');
+        if (group) {
+            syncHiddenIds(group);
+        }
     });
 
     $('.pnp-product-selector').on('change', 'input.pnp-prod', function(){
