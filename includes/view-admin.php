@@ -5,6 +5,18 @@
 $is_edit_screen  = isset( $_GET['edit'] );
 $list_tab_class  = $is_edit_screen ? '' : 'active';
 $form_tab_class  = $is_edit_screen ? 'active' : '';
+$scope_labels = [
+    'product'     => 'Proizvod',
+    'product_cat' => 'Kategorija',
+    'brend'       => 'Brend',
+    'linija'      => 'Linija',
+];
+$term_names = [];
+foreach ( $all_terms as $tax => $terms ) {
+    foreach ( $terms as $term ) {
+        $term_names[ $tax ][ $term->term_id ] = $term->name;
+    }
+}
 ?>
 
 <div class="wrap pnp-modern-wrap">
@@ -25,21 +37,57 @@ $form_tab_class  = $is_edit_screen ? 'active' : '';
         <a href="<?php echo esc_url(add_query_arg('edit', 0, admin_url('admin.php?page=pnp_settings'))); ?>" class="pnp-add-new-btn">
             <?php esc_html_e('+ Dodaj novo pravilo', 'pokloni-popusti'); ?>
         </a>
+
+        <div class="pnp-rules-toolbar">
+            <div class="pnp-rules-toolbar-left">
+                <input type="search" class="pnp-rules-search" placeholder="<?php esc_attr_e('Pretraga pravila…', 'pokloni-popusti'); ?>">
+                <select class="pnp-rules-filter" id="pnp-filter-status">
+                    <option value="all"><?php esc_html_e('Sva stanja', 'pokloni-popusti'); ?></option>
+                    <option value="active"><?php esc_html_e('Aktivna', 'pokloni-popusti'); ?></option>
+                    <option value="inactive"><?php esc_html_e('Onemogućena', 'pokloni-popusti'); ?></option>
+                </select>
+                <select class="pnp-rules-filter" id="pnp-filter-reward">
+                    <option value="all"><?php esc_html_e('Sve nagrade', 'pokloni-popusti'); ?></option>
+                    <option value="gift"><?php esc_html_e('Poklon', 'pokloni-popusti'); ?></option>
+                    <option value="free"><?php esc_html_e('Gratis', 'pokloni-popusti'); ?></option>
+                </select>
+                <select class="pnp-rules-filter" id="pnp-filter-condition">
+                    <option value="all"><?php esc_html_e('Svi uslovi', 'pokloni-popusti'); ?></option>
+                    <option value="buy_x"><?php esc_html_e('Kupi X', 'pokloni-popusti'); ?></option>
+                    <option value="buy_xy"><?php esc_html_e('Kupi X + Y', 'pokloni-popusti'); ?></option>
+                    <option value="cart"><?php esc_html_e('Vrednost korpe', 'pokloni-popusti'); ?></option>
+                </select>
+                <select class="pnp-rules-filter" id="pnp-sort-rules">
+                    <option value="priority_desc"><?php esc_html_e('Prioritet ↓', 'pokloni-popusti'); ?></option>
+                    <option value="priority_asc"><?php esc_html_e('Prioritet ↑', 'pokloni-popusti'); ?></option>
+                    <option value="id_desc"><?php esc_html_e('ID ↓', 'pokloni-popusti'); ?></option>
+                    <option value="id_asc"><?php esc_html_e('ID ↑', 'pokloni-popusti'); ?></option>
+                </select>
+                <button type="button" class="button pnp-rules-reset"><?php esc_html_e('Reset', 'pokloni-popusti'); ?></button>
+            </div>
+            <div class="pnp-rules-toolbar-right">
+                <span class="pnp-rules-count" data-total="<?php echo esc_attr(count($rules)); ?>">
+                    <?php echo esc_html(sprintf(__('Prikazano %1$d od %2$d', 'pokloni-popusti'), count($rules), count($rules))); ?>
+                </span>
+            </div>
+        </div>
         
         <?php if (empty($rules)) : ?>
             <p><?php esc_html_e('Nema pravila. Dodajte svoje prvo pravilo.', 'pokloni-popusti'); ?></p>
         <?php else : ?>
             <div class="pnp-rule-cards">
-                <?php foreach ($rules as $r) : 
+                <?php foreach ($rules as $index => $r) : 
                     // Determine reward type badge
                     $reward_badge = '';
                     $reward_color = '';
                     if ($r['reward_type'] === 'gift') {
                         $reward_badge = '🎁 POKLON';
                         $reward_color = '#10b981'; // green
+                        $reward_title = __( 'Poklon iz posebne kategorije poklona.', 'pokloni-popusti' );
                     } else {
                         $reward_badge = '🆓 GRATIS';
                         $reward_color = '#3b82f6'; // blue
+                        $reward_title = __( 'Gratis proizvod (naplata 0.01 RSD).', 'pokloni-popusti' );
                     }
                     
                     // Determine condition type
@@ -51,12 +99,46 @@ $form_tab_class  = $is_edit_screen ? 'active' : '';
                     } else {
                         $cond_text = sprintf('🛒 Kupi %d X', $r['buy_x_qty']);
                     }
+
+                    $condition_type = $r['enable_cart'] ? 'cart' : ( $r['enable_buy_y'] ? 'buy_xy' : 'buy_x' );
+                    $status_text = (int) $r['active'] === 1 ? __( 'Aktivno', 'pokloni-popusti' ) : __( 'Onemogućeno', 'pokloni-popusti' );
+                    $status_class = (int) $r['active'] === 1 ? 'pnp-status-active' : 'pnp-status-inactive';
+
+                    $scope = $r['enable_cart'] ? $r['cart_scope'] : $r['buy_x_scope'];
+                    $term_id = $r['enable_cart'] ? $r['cart_term'] : $r['buy_x_term'];
+                    $ids_csv = $r['enable_cart'] ? $r['cart_ids'] : $r['buy_x_ids'];
+                    $ids = array_filter( array_map( 'absint', explode( ',', $ids_csv ) ) );
+                    $scope_label = $scope_labels[ $scope ] ?? ucfirst( $scope );
+                    $term_label = '';
+                    if ( 'product' === $scope ) {
+                        $term_label = sprintf( __( 'Odabrano: %d', 'pokloni-popusti' ), count( $ids ) );
+                    } else {
+                        $term_label = $term_id && isset( $term_names[ $scope ][ $term_id ] )
+                            ? $term_names[ $scope ][ $term_id ]
+                            : '—';
+                    }
+                    $search_text = strtolower( sprintf(
+                        'pravilo %d %s %s %s %s %s',
+                        $r['id'],
+                        $reward_badge,
+                        $cond_text,
+                        $scope_label,
+                        $term_label,
+                        $status_text
+                    ) );
                 ?>
-                    <div class="pnp-rule-card">
+                    <div class="pnp-rule-card"
+                         data-rule-id="<?php echo esc_attr($r['id']); ?>"
+                         data-active="<?php echo esc_attr((int) $r['active']); ?>"
+                         data-reward-type="<?php echo esc_attr($r['reward_type']); ?>"
+                         data-condition-type="<?php echo esc_attr($condition_type); ?>"
+                         data-priority="<?php echo esc_attr($r['priority']); ?>"
+                         data-initial-index="<?php echo esc_attr($index); ?>"
+                         data-search="<?php echo esc_attr($search_text); ?>">
                         <!-- Header with badge -->
                         <div class="pnp-rule-card-header">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <span class="pnp-rule-badge" style="background:<?php echo esc_attr($reward_color); ?>;">
+                                <span class="pnp-rule-badge" style="background:<?php echo esc_attr($reward_color); ?>;" title="<?php echo esc_attr($reward_title); ?>">
                                     <?php echo esc_html($reward_badge); ?>
                                 </span>
                                 <h3 class="pnp-rule-card-title">
@@ -64,6 +146,9 @@ $form_tab_class  = $is_edit_screen ? 'active' : '';
                                 </h3>
                             </div>
                             <div class="pnp-rule-status">
+                                <span class="pnp-status-pill <?php echo esc_attr($status_class); ?>">
+                                    <?php echo esc_html($status_text); ?>
+                                </span>
                                 <label class="pnp-toggle-switch">
                                     <input type="checkbox" data-rule-id="<?php echo esc_attr($r['id']); ?>" 
                                            <?php checked($r['active'], 1); ?>>
@@ -84,6 +169,13 @@ $form_tab_class  = $is_edit_screen ? 'active' : '';
                             <div class="pnp-rule-detail-row">
                                 <span class="pnp-rule-detail-label">Uslov:</span>
                                 <span class="pnp-rule-detail-value"><?php echo wp_kses_post($cond_text); ?></span>
+                            </div>
+
+                            <div class="pnp-rule-detail-row">
+                                <span class="pnp-rule-detail-label">Opseg:</span>
+                                <span class="pnp-rule-detail-value">
+                                    <?php echo esc_html($scope_label); ?> • <?php echo esc_html($term_label); ?>
+                                </span>
                             </div>
                             
                             <div class="pnp-rule-detail-row">
@@ -110,18 +202,34 @@ $form_tab_class  = $is_edit_screen ? 'active' : '';
                             <a href="<?php echo esc_url(add_query_arg('edit', $r['id'])); ?>" class="pnp-btn pnp-btn-edit">
                                 Izmeni
                             </a>
-                            <form style="display:inline" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" 
-                                  onsubmit="return confirm('Obriši ovo pravilo?')">
+                            <form style="display:inline" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="pnp-delete-form" data-rule-id="<?php echo esc_attr($r['id']); ?>">
                                 <?php wp_nonce_field('pnp_delete', PNP_NONCE); ?>
                                 <input type="hidden" name="action" value="pnp_delete">
                                 <input type="hidden" name="id" value="<?php echo esc_attr($r['id']); ?>">
-                                <button type="submit" class="pnp-btn pnp-btn-delete">Obriši</button>
+                                <button type="button" class="pnp-btn pnp-btn-delete pnp-delete-trigger">Obriši</button>
                             </form>
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
+            <p class="pnp-filter-empty" style="display:none;">
+                <?php esc_html_e('Nema pravila koja odgovaraju izabranim filterima.', 'pokloni-popusti'); ?>
+            </p>
         <?php endif; ?>
+    </div>
+
+    <div class="pnp-modal" id="pnp-delete-modal" aria-hidden="true" role="dialog" aria-labelledby="pnp-delete-title">
+        <div class="pnp-modal-overlay" data-modal-close="true"></div>
+        <div class="pnp-modal-content">
+            <h3 id="pnp-delete-title"><?php esc_html_e('Potvrda brisanja', 'pokloni-popusti'); ?></h3>
+            <p class="pnp-modal-text">
+                <?php esc_html_e('Da li ste sigurni da želite da obrišete ovo pravilo? Ova akcija se ne može poništiti.', 'pokloni-popusti'); ?>
+            </p>
+            <div class="pnp-modal-actions">
+                <button type="button" class="button pnp-modal-cancel"><?php esc_html_e('Otkaži', 'pokloni-popusti'); ?></button>
+                <button type="button" class="button button-primary pnp-modal-confirm"><?php esc_html_e('Obriši pravilo', 'pokloni-popusti'); ?></button>
+            </div>
+        </div>
     </div>
 
     <!-- ========== TAB 2: ADD/EDIT RULE ========== -->
@@ -521,6 +629,36 @@ $form_tab_class  = $is_edit_screen ? 'active' : '';
 <script>
 jQuery(function($){
     const nonce = '<?php echo esc_js(wp_create_nonce(PNP_NONCE)); ?>';
+    const pendingRequests = {};
+    const hiddenFieldMap = {
+        reward: 'reward_ids_free',
+        buy_x: 'buy_x_ids',
+        buy_y: 'buy_y_ids',
+        cart: 'cart_ids'
+    };
+
+    function getHiddenIds(group) {
+        const fieldName = hiddenFieldMap[group];
+        if (!fieldName) {
+            return [];
+        }
+        const raw = $('input[name="' + fieldName + '"]').val() || '';
+        return raw.split(',').map(function(id){
+            return parseInt(id, 10);
+        }).filter(Boolean);
+    }
+
+    function syncHiddenIds(group) {
+        const fieldName = hiddenFieldMap[group];
+        if (!fieldName) {
+            return;
+        }
+        const ids = [];
+        $('#' + group + '_products').find('input.pnp-prod:checked').each(function(){
+            ids.push($(this).val());
+        });
+        $('input[name="' + fieldName + '"]').val(ids.join(','));
+    }
     
     // ========== Reward Type Toggle ==========
     $('#pnp_reward_type').on('change', function(){
@@ -561,8 +699,13 @@ jQuery(function($){
         if (!$target.length) return;
         
         $target.html('<em>Učitavanje…</em>');
+
+        if (pendingRequests[group]) {
+            pendingRequests[group].abort();
+        }
         
-        $.post(ajaxurl, {
+        const selectedIds = getHiddenIds(group);
+        pendingRequests[group] = $.post(ajaxurl, {
             action: 'pnp_get_products',
             nonce: nonce,
             tax: scope,
@@ -574,13 +717,17 @@ jQuery(function($){
             
             let html = '';
             res.data.forEach(function(p){
+                const isChecked = selectedIds.includes(p.id) ? ' checked' : '';
                 html += '<div class="pnp-product-item">' +
-                        '<label><input type="checkbox" class="pnp-prod" value="' + p.id + '"> ' + 
+                        '<label><input type="checkbox" class="pnp-prod" data-group="' + group + '" value="' + p.id + '"' + isChecked + '> ' + 
                         p.title + '</label></div>';
             });
             $target.html(html);
+            syncHiddenIds(group);
         }).fail(function(){
             $target.html('<em>Greška pri učitavanju.</em>');
+        }).always(function(){
+            pendingRequests[group] = null;
         });
     }
 
@@ -595,6 +742,13 @@ jQuery(function($){
         loadProducts(group);
     });
 
+    $('.pnp-product-selector').on('change', 'input.pnp-prod', function(){
+        const group = $(this).data('group');
+        if (group) {
+            syncHiddenIds(group);
+        }
+    });
+
     // ========== Select All ==========
     $('.pnp-select-all').on('change', function(){
         const target = $(this).data('target');
@@ -603,6 +757,9 @@ jQuery(function($){
             : $('#' + target + '_products');
         
         $container.find('input[type="checkbox"]').prop('checked', $(this).is(':checked'));
+        if (target !== 'reward') {
+            syncHiddenIds(target);
+        }
     });
 
     // ========== Time Limit Toggle ==========
