@@ -60,6 +60,51 @@ add_action( 'plugins_loaded', function () {
 }, 20 );
 
 /* ─────────────────────────────────────────────────────────
+ *  UPDATES
+ * ──────────────────────────────────────────────────────── */
+add_action( 'plugins_loaded', function () {
+    require_once PNP_PLUGIN_DIR . 'includes/updater.php';
+
+    \UUPD\V1\UUPD_Updater_V1::register( [
+        'plugin_file' => plugin_basename( __FILE__ ),
+        'slug'        => 'pokloni-plugin',
+        'name'        => 'Pokloni & Popusti – BOGO / Gifts / Discounts for WooCommerce',
+        'version'     => PNP_VERSION,
+        'server'      => 'https://raw.githubusercontent.com/centrino97/pokloni-plugin/main/uupd/index.json',
+    ] );
+}, 20 );
+
+/* ─────────────────────────────────────────────────────────
+ *  UPDATES
+ * ──────────────────────────────────────────────────────── */
+add_action( 'plugins_loaded', function () {
+    require_once PNP_PLUGIN_DIR . 'includes/updater.php';
+
+    \UUPD\V1\UUPD_Updater_V1::register( [
+        'plugin_file' => plugin_basename( __FILE__ ),
+        'slug'        => 'pokloni-plugin',
+        'name'        => 'Pokloni & Popusti – BOGO / Gifts / Discounts for WooCommerce',
+        'version'     => PNP_VERSION,
+        'server'      => 'https://raw.githubusercontent.com/centrino97/pokloni-plugin/main/uupd/index.json',
+    ] );
+}, 20 );
+
+/* ─────────────────────────────────────────────────────────
+ *  UPDATES
+ * ──────────────────────────────────────────────────────── */
+add_action( 'plugins_loaded', function () {
+    require_once PNP_PLUGIN_DIR . 'includes/updater.php';
+
+    \UUPD\V1\UUPD_Updater_V1::register( [
+        'plugin_file' => plugin_basename( __FILE__ ),
+        'slug'        => 'pokloni-plugin',
+        'name'        => 'Pokloni & Popusti – BOGO / Gifts / Discounts for WooCommerce',
+        'version'     => PNP_VERSION,
+        'server'      => 'https://raw.githubusercontent.com/centrino97/pokloni-plugin/main/uupd/index.json',
+    ] );
+}, 20 );
+
+/* ─────────────────────────────────────────────────────────
  *  HOOKS (front end)
  * ──────────────────────────────────────────────────────── */
 add_action( 'woocommerce_before_calculate_totals', [ 'PNP_Rules', 'reset_prices' ],  1 );

@@ -867,6 +867,13 @@ jQuery(function($){
         }
     });
 
+    $('.pnp-product-selector').on('change', 'input.pnp-prod', function(){
+        const group = $(this).data('group');
+        if (group) {
+            syncHiddenIds(group);
+        }
+    });
+
     // ========== Select All ==========
     $('.pnp-select-all').on('change', function(){
         const target = $(this).data('target');
