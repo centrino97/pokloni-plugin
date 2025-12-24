@@ -2,10 +2,17 @@ jQuery(document).ready(function($) {
     const $ruleCards = $('.pnp-rule-card');
     const $ruleList = $('.pnp-rule-cards');
     const $emptyState = $('.pnp-filter-empty');
+    const $ruleModal = $('#pnp-add-rule');
 
     // Tab switching
-    $('.pnp-tab').on('click', function() {
+    $('.pnp-tab').on('click', function(event) {
         var tabId = $(this).data('tab');
+
+        if (tabId === 'pnp-add-rule' && $ruleModal.length) {
+            event.preventDefault();
+            openRuleModal();
+            return;
+        }
 
         $('.pnp-tab').removeClass('active');
         $(this).addClass('active');
@@ -13,6 +20,18 @@ jQuery(document).ready(function($) {
         $('.pnp-tab-content').removeClass('active');
         $('#' + tabId).addClass('active');
     });
+
+    function openRuleModal() {
+        $ruleModal.addClass('is-open').attr('aria-hidden', 'false');
+        $('body').addClass('pnp-modal-open');
+        showStep(1);
+        updateSummary();
+    }
+
+    function closeRuleModal() {
+        $ruleModal.removeClass('is-open').attr('aria-hidden', 'true');
+        $('body').removeClass('pnp-modal-open');
+    }
 
     function updateStatus($card, isActive) {
         $card.attr('data-active', isActive ? '1' : '0');
@@ -169,4 +188,117 @@ jQuery(document).ready(function($) {
             closeModal();
         }
     });
+
+    // Rule editor modal + steps
+    const $steps = $('.pnp-rule-step');
+    const $sections = $('.pnp-step');
+    const $stepPrev = $('.pnp-step-prev');
+    const $stepNext = $('.pnp-step-next');
+    const $stepSave = $('.pnp-step-save');
+
+    function showStep(step) {
+        const nextStep = Math.min(Math.max(step, 1), 4);
+        $sections.hide().filter('[data-step="' + nextStep + '"]').show();
+        $steps.removeClass('is-active').filter('[data-step="' + nextStep + '"]').addClass('is-active');
+        $stepPrev.toggle(nextStep > 1);
+        $stepNext.toggle(nextStep < 4);
+        $stepSave.toggle(nextStep === 4);
+        $ruleModal.data('current-step', nextStep);
+    }
+
+    $steps.on('click', function() {
+        showStep(parseInt($(this).data('step'), 10));
+    });
+
+    $stepPrev.on('click', function() {
+        showStep(($ruleModal.data('current-step') || 1) - 1);
+    });
+
+    $stepNext.on('click', function() {
+        showStep(($ruleModal.data('current-step') || 1) + 1);
+    });
+
+    $(document).on('click', '.pnp-rule-modal-close, .pnp-rule-modal .pnp-modal-overlay', function() {
+        closeRuleModal();
+    });
+
+    $(document).on('keydown', function(event) {
+        if (event.key === 'Escape' && $ruleModal.hasClass('is-open')) {
+            closeRuleModal();
+        }
+    });
+
+    function scopeSummary(scopeSelector, termSelector, containerSelector, hiddenName) {
+        const scopeVal = $(scopeSelector).val();
+        const scopeText = $(scopeSelector + ' option:selected').text() || '—';
+        if (scopeVal === 'product') {
+            let count = $(containerSelector).find('input[type="checkbox"]:checked').length;
+            if (!count && hiddenName) {
+                const raw = $('input[name="' + hiddenName + '"]').val() || '';
+                count = raw ? raw.split(',').filter(Boolean).length : 0;
+            }
+            return scopeText + ' (odabrano ' + count + ')';
+        }
+        const termText = $(termSelector + ' option:selected').text() || '—';
+        return scopeText + ': ' + termText;
+    }
+
+    function updateSummary() {
+        if (!$ruleModal.length) return;
+
+        const rewardType = $('#pnp_reward_type').val();
+        const rewardQty = $('input[name="reward_qty"]').val() || '1';
+        let rewardText = '';
+
+        if (rewardType === 'gift') {
+            const count = $('#pnp_reward_products input:checked').length;
+            rewardText = 'Poklon × ' + rewardQty + (count ? ' (odabrano ' + count + ')' : ' (svi pokloni)');
+        } else {
+            const rewardScope = scopeSummary('#reward_scope', '#reward_term', '#reward_products', 'reward_ids_free');
+            const maxPrice = $('input[name="reward_max_price"]').val();
+            rewardText = 'Gratis × ' + rewardQty + ' (' + rewardScope + ')';
+            if (maxPrice) {
+                rewardText += ' • max ' + maxPrice + ' RSD';
+            }
+        }
+
+        const condType = $('input[name="cond_type"]:checked').val();
+        let conditionText = '—';
+        let scopeText = '—';
+
+        if (condType === 'cart') {
+            const cartVal = $('input[name="cart_val"]').val() || '0';
+            conditionText = 'Korpa ≥ ' + cartVal + ' RSD';
+            scopeText = scopeSummary('#cart_scope', '#cart_term', '#cart_products', 'cart_ids');
+        } else if (condType === 'buy_xy') {
+            const qtyX = $('input[name="buy_x_qty"]').val() || '1';
+            const qtyY = $('input[name="buy_y_qty"]').val() || '1';
+            conditionText = 'Kupi ' + qtyX + ' X + ' + qtyY + ' Y';
+            scopeText = 'X: ' + scopeSummary('#buy_x_scope', '#buy_x_term', '#buy_x_products', 'buy_x_ids') +
+                ' | Y: ' + scopeSummary('#buy_y_scope', '#buy_y_term', '#buy_y_products', 'buy_y_ids');
+        } else {
+            const qtyX = $('input[name="buy_x_qty"]').val() || '1';
+            conditionText = 'Kupi ' + qtyX + ' X';
+            scopeText = scopeSummary('#buy_x_scope', '#buy_x_term', '#buy_x_products', 'buy_x_ids');
+        }
+
+        const noLimit = $('#no_time_limit').is(':checked');
+        const scheduleStart = $('input[name="schedule_start"]').val();
+        const scheduleEnd = $('input[name="schedule_end"]').val();
+        const scheduleText = noLimit ? 'Uvek aktivno' : (scheduleStart || '—') + ' → ' + (scheduleEnd || '—');
+
+        $('.pnp-rule-summary-text').text('Ako: ' + conditionText + ' → Dobija: ' + rewardText);
+        $('[data-summary="reward"]').text(rewardText);
+        $('[data-summary="condition"]').text(conditionText);
+        $('[data-summary="scope"]').text(scopeText);
+        $('[data-summary="schedule"]').text(scheduleText);
+    }
+
+    $(document).on('change input', '#pnp-rule-form input, #pnp-rule-form select, #pnp-rule-form textarea', function() {
+        updateSummary();
+    });
+
+    if ($ruleModal.data('edit') === 1) {
+        openRuleModal();
+    }
 });

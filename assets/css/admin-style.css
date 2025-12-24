@@ -182,6 +182,10 @@ input:checked + .pnp-slider:before {
     color: #1d2327;
 }
 
+.pnp-rule-summary {
+    font-weight: 600;
+ }
+
 /* Rules toolbar */
 .pnp-rules-toolbar {
     display: flex;
@@ -319,6 +323,130 @@ input:checked + .pnp-slider:before {
     margin-top: 20px;
 }
 
+/* Rule editor modal */
+.pnp-rule-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+}
+
+.pnp-rule-modal.is-open {
+    display: flex;
+}
+
+.pnp-rule-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.pnp-rule-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.pnp-rule-modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.pnp-rule-modal-close {
+    font-size: 22px;
+    text-decoration: none;
+}
+
+.pnp-rule-steps {
+    display: flex;
+    gap: 8px;
+    padding: 12px 24px;
+    border-bottom: 1px solid #f0f0f1;
+    background: #fafafa;
+}
+
+.pnp-rule-step {
+    background: transparent;
+    border: 1px solid #dcdcde;
+    border-radius: 16px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.pnp-rule-step.is-active {
+    border-color: #2271b1;
+    color: #2271b1;
+    font-weight: 600;
+    background: #f0f6fc;
+}
+
+.pnp-rule-modal-body {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+    gap: 20px;
+    padding: 20px 24px;
+    overflow-y: auto;
+    max-height: calc(90vh - 140px);
+}
+
+.pnp-rule-modal-main {
+    min-width: 0;
+}
+
+.pnp-rule-modal-summary {
+    background: #f9fafb;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 16px;
+    font-size: 13px;
+}
+
+.pnp-rule-summary-text {
+    font-weight: 600;
+    margin: 10px 0 16px;
+}
+
+.pnp-rule-summary-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.pnp-rule-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f1;
+}
+
+.pnp-step-prev {
+    margin-right: auto;
+}
+
+body.pnp-modal-open {
+    overflow: hidden;
+}
+
+@media (max-width: 960px) {
+    .pnp-rule-modal-body {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Form Styles */
 .pnp-form-section {
     margin-bottom: 30px;
@@ -348,6 +476,12 @@ input:checked + .pnp-slider:before {
     font-weight: 500;
     margin-bottom: 8px;
     color: #50575e;
+}
+
+.pnp-help {
+    margin-top: 8px;
+    color: #646970;
+    font-size: 12px;
 }
 
 .pnp-form-group input,
