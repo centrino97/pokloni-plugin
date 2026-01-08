@@ -1,3 +1,5 @@
-PLS – Private Label Store
+Pokloni & Popusti – BOGO / Gifts / Discounts for WooCommerce
 Self-hosted updates via UUPD.
-Repo: https://github.com/centrino97/pls-private-label-store
+Repo: https://github.com/centrino97/pokloni-plugin
+Asset: pokloni-plugin.zip
+Version: 1.5.0

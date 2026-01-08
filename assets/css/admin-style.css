@@ -52,12 +52,17 @@
 }
 
 .pnp-rule-card {
-    border: 1px solid #dcdcde;
-    border-radius: 4px;
-    padding: 20px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 18px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0,0,0,0.04);
     transition: box-shadow 0.3s;
+}
+
+.pnp-rule-card[data-active="0"] {
+    background: #fbfbfb;
+    border-color: #e5e5e5;
 }
 
 .pnp-rule-card:hover {
@@ -70,7 +75,7 @@
     align-items: center;
     margin-bottom: 15px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #f0f0f1;
+    border-bottom: 1px solid #f5f5f6;
 }
 
 .pnp-rule-card-title {
@@ -83,6 +88,31 @@
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.pnp-status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #f0f0f1;
+    color: #1d2327;
+}
+
+.pnp-status-active {
+    background: #e7f7ef;
+    color: #0f5132;
+}
+
+.pnp-status-inactive {
+    background: #fbeaea;
+    color: #842029;
+}
+
+.pnp-is-saving {
+    opacity: 0.7;
 }
 
 /* Toggle Switch */
@@ -143,6 +173,10 @@ input:checked + .pnp-slider:before {
     font-size: 14px;
 }
 
+.pnp-rule-detail-row + .pnp-rule-detail-row {
+    border-top: 1px dashed #f0f0f1;
+}
+
 .pnp-rule-detail-label {
     font-weight: 500;
     color: #50575e;
@@ -150,6 +184,48 @@ input:checked + .pnp-slider:before {
 
 .pnp-rule-detail-value {
     color: #1d2327;
+}
+
+.pnp-rule-summary {
+    font-weight: 600;
+}
+
+/* Rules toolbar */
+.pnp-rules-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.pnp-rules-toolbar-left {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.pnp-rules-search {
+    min-width: 220px;
+    padding: 6px 10px;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+}
+
+.pnp-rules-filter {
+    min-width: 150px;
+}
+
+.pnp-rules-count {
+    font-size: 13px;
+    color: #50575e;
+}
+
+.pnp-filter-empty {
+    margin-top: 10px;
+    color: #646970;
 }
 
 /* Action Buttons */
@@ -190,6 +266,11 @@ input:checked + .pnp-slider:before {
     color: #fff;
 }
 
+.pnp-btn-delete.pnp-delete-trigger {
+    border: 1px solid #dc3232;
+    box-shadow: none;
+}
+
 /* Add New Rule Button */
 .pnp-add-new-btn {
     background: #2271b1;
@@ -206,6 +287,168 @@ input:checked + .pnp-slider:before {
 
 .pnp-add-new-btn:hover {
     background: #135e96;
+}
+
+/* Modal */
+.pnp-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+}
+
+.pnp-modal.is-open {
+    display: flex;
+}
+
+.pnp-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.pnp-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 6px;
+    padding: 24px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.pnp-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Rule editor modal */
+.pnp-rule-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+}
+
+.pnp-rule-modal.is-open {
+    display: flex;
+}
+
+.pnp-rule-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.pnp-rule-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.pnp-rule-modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.pnp-rule-modal-close {
+    font-size: 22px;
+    text-decoration: none;
+}
+
+.pnp-rule-steps {
+    display: flex;
+    gap: 8px;
+    padding: 12px 24px;
+    border-bottom: 1px solid #f0f0f1;
+    background: #fafafa;
+}
+
+.pnp-rule-step {
+    background: transparent;
+    border: 1px solid #dcdcde;
+    border-radius: 16px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.pnp-rule-step.is-active {
+    border-color: #2271b1;
+    color: #2271b1;
+    font-weight: 600;
+    background: #f0f6fc;
+}
+
+.pnp-rule-modal-body {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+    gap: 20px;
+    padding: 20px 24px;
+    overflow-y: auto;
+    max-height: calc(90vh - 140px);
+}
+
+.pnp-rule-modal-main {
+    min-width: 0;
+}
+
+.pnp-rule-modal-summary {
+    background: #f9fafb;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 16px;
+    font-size: 13px;
+}
+
+.pnp-rule-summary-text {
+    font-weight: 600;
+    margin: 10px 0 16px;
+}
+
+.pnp-rule-summary-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.pnp-rule-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f1;
+}
+
+.pnp-step-prev {
+    margin-right: auto;
+}
+
+body.pnp-modal-open {
+    overflow: hidden;
+}
+
+@media (max-width: 960px) {
+    .pnp-rule-modal-body {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Form Styles */
@@ -237,6 +480,30 @@ input:checked + .pnp-slider:before {
     font-weight: 500;
     margin-bottom: 8px;
     color: #50575e;
+}
+
+.pnp-help {
+    margin-top: 8px;
+    color: #646970;
+    font-size: 12px;
+}
+
+.pnp-selected-preview {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    margin: 10px 0;
+    font-size: 12px;
+    color: #50575e;
+}
+
+.pnp-selected-label {
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.pnp-selected-text {
+    color: #1d2327;
 }
 
 .pnp-form-group input,
